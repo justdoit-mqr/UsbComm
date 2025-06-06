@@ -1,3 +1,8 @@
+/*
+ *@author:  缪庆瑞
+ *@date:    2025.06.06
+ *@brief:   作为一个demo负责提供UsbComm和UsbMonitor组件的使用方法和测试
+ */
 #include "widget.h"
 #include "ui_widget.h"
 #include <QDebug>
@@ -61,21 +66,23 @@ void Widget::on_pushButton_3_clicked()
     if(hotplugMonitor == NULL)
     {
         hotplugMonitor = new UsbMonitor(this);
-        connect(hotplugMonitor,SIGNAL(deviceHotplugSig(bool)),this,SLOT(deviceHotplugSlot(bool)));
+        connect(hotplugMonitor,&UsbMonitor::deviceHotplugSig,this,&Widget::deviceHotplugSlot);
     }
-    hotplugMonitor->deregisterHotplugMonitorService();
+    hotplugMonitor->deregisterHotplugMonitorService();//注销当前所有的热插拔服务回调
     hotplugMonitor->registerHotplugMonitorService();
 }
 //设备插拔信号响应槽
-void Widget::deviceHotplugSlot(bool isAttached)
+void Widget::deviceHotplugSlot(bool isAttached, int vendorId, int productId, int port)
 {
     if(isAttached)//插入
     {
-        qDebug()<<"usb device attached";
+        qDebug()<<QString("usb device attached::VID=0x%1 PID=0x%2 Port=%3")
+                  .arg(vendorId,0,16).arg(productId,0,16).arg(port);
     }
     else//拔出
     {
-        qDebug()<<"usb device detached";
+        qDebug()<<QString("usb device detached::VID=0x%1 PID=0x%2 Port=%3")
+                  .arg(vendorId,0,16).arg(productId,0,16).arg(port);
     }
 }
 //打开指定的usb设备，并接收通信数据

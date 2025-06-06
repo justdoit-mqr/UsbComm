@@ -15,11 +15,13 @@ TEMPLATE = app
 INCLUDEPATH += 3rdparty/
 
 SOURCES += main.cpp\
+    usbmonitor.cpp \
         widget.cpp \
     usbcomm.cpp
 
 HEADERS  += widget.h \
-    usbcomm.h
+    usbcomm.h \
+    usbmonitor.h
 
 FORMS    += widget.ui
 
